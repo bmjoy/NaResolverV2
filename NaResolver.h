@@ -110,44 +110,6 @@ namespace NaOrganization
 				static HMODULE GetModule();
 			};
 
-			class String
-			{
-			public:
-				void* address = nullptr;
-				wchar_t* data = nullptr;
-				String() {}
-				String(void* address) : address(address)
-				{
-					static auto string_chars = UnityApiInvoker<wchar_t*, void*>(TEXT("il2cpp_string_chars"), TEXT("mono_string_chars"));
-					data = string_chars(address);
-				}
-				String(std::string string)
-				{
-					// il2cpp_string_new(x), mono_string_new(domain, x)
-					static auto il2cpp_string_new = UnityApiInvoker<void*, const char*>(TEXT("il2cpp_string_new"));
-					if (il2cpp_string_new.IsValid())
-					{
-						address = il2cpp_string_new(string.c_str());
-					}
-					else
-					{
-						static auto mono_string_new = UnityApiInvoker<void*, void*, const char*>(TEXT("mono_string_new"));
-						address = mono_string_new(Domain::Get(), string.c_str());
-					}
-				}
-				operator void* const () { return address; }
-
-				std::string ToString() const
-				{
-					if (!data)
-						return "";
-					std::wstring wData(data);
-					return std::string(wData.begin(), wData.end());
-				}
-
-				operator std::string const () { return ToString(); }
-			};
-
 			class Type
 			{
 			public:
@@ -224,6 +186,44 @@ namespace NaOrganization
 				static Domain Get();
 
 				Assembly OpenAssembly(std::string name) const;
+			};
+
+			class String
+			{
+			public:
+				void* address = nullptr;
+				wchar_t* data = nullptr;
+				String() {}
+				String(void* address) : address(address)
+				{
+					static auto string_chars = UnityApiInvoker<wchar_t*, void*>(TEXT("il2cpp_string_chars"), TEXT("mono_string_chars"));
+					data = string_chars(address);
+				}
+				String(std::string string)
+				{
+					// il2cpp_string_new(x), mono_string_new(domain, x)
+					static auto il2cpp_string_new = UnityApiInvoker<void*, const char*>(TEXT("il2cpp_string_new"));
+					if (il2cpp_string_new.IsValid())
+					{
+						address = il2cpp_string_new(string.c_str());
+					}
+					else
+					{
+						static auto mono_string_new = UnityApiInvoker<void*, void*, const char*>(TEXT("mono_string_new"));
+						address = mono_string_new(Domain::Get(), string.c_str());
+					}
+				}
+				operator void* const () { return address; }
+
+				std::string ToString() const
+				{
+					if (!data)
+						return "";
+					std::wstring wData(data);
+					return std::string(wData.begin(), wData.end());
+				}
+
+				operator std::string const () { return ToString(); }
 			};
 
 			class Thread
@@ -581,10 +581,10 @@ namespace NaOrganization
 			while ((method = parent.klass.GetMethods(&iterator)) != nullptr)
 			{
 				std::string name = method.GetName();
-				if (name.compare(methodName) == std::string::npos && name.compare(TEXT("_AUTO_")) == std::string::npos)
+				if (name != methodName && name != TEXT("_AUTO_"))
 					continue;
 				std::string returnType = method.GetReturnType().GetName();
-				if (returnType.compare(returnTypeName) != std::string::npos && returnType.compare(TEXT("_AUTO_")) != std::string::npos)
+				if (returnType != returnTypeName && returnType != TEXT("_AUTO_"))
 					continue;
 				std::vector<UnityGeneral::Type> parametersType = method.GetParametersType();
 				if (parametersType.size() != parametersTypeName.size())
@@ -593,7 +593,7 @@ namespace NaOrganization
 				for (size_t i = 0; i < parametersType.size(); i++)
 				{
 					std::string parameterType = parametersType[i].GetName();
-					if (parameterType.compare(parametersTypeName[i]) != std::string::npos && parameterType.compare(TEXT("_AUTO_")) != std::string::npos)
+					if (parameterType != parametersTypeName[i] && parameterType != TEXT("_AUTO_"))
 					{
 						isMatch = false;
 						break;
