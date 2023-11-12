@@ -10,14 +10,14 @@ public:
 
 	int GetInstanceID()
 	{
-		static auto invoker = NaApiInvoker<int, void*>(UnityResolver.GetMethod(ThisClass(), "System.Int32", "GetInstanceID()", {})
+		static auto invoker = NaApiInvoker<int, void*>(UnityResolver.GetMethod(ThisClass(), "System.Int32", "GetInstanceID", {})
 			.method.GetInvokeAddress());
 		return invoker.Invoke(this);
 	}
 
 	void set_name(UnityGeneral::String value)
 	{
-		static auto invoker = NaApiInvoker<void, void*, UnityGeneral::String>(UnityResolver.GetMethod(ThisClass(), "System.Void", "set_name(System.String)", { "System.String" })
+		static auto invoker = NaApiInvoker<void, void*, UnityGeneral::String>(UnityResolver.GetMethod(ThisClass(), "System.Void", "set_name", { "System.String" })
 			.method.GetInvokeAddress());
 		invoker.Invoke(this, value);
 	}
@@ -33,14 +33,14 @@ public:
 
 	void* get_transform()
 	{
-		static auto invoker = NaApiInvoker<void*, void*>(UnityResolver.GetMethod(ThisClass(), "UnityEngine.Transform", "get_transform()", {})
+		static auto invoker = NaApiInvoker<void*, void*>(UnityResolver.GetMethod(ThisClass(), "UnityEngine.Transform", "get_transform", {})
 			.method.GetInvokeAddress());
 		return invoker.Invoke(this);
 	}
 
 	UnityGeneral::String get_tag()
 	{
-		static auto invoker = NaApiInvoker<void*, void*>(UnityResolver.GetMethod(ThisClass(), "UnityEngine.Transform", "get_tag()", {})
+		static auto invoker = NaApiInvoker<void*, void*>(UnityResolver.GetMethod(ThisClass(), "UnityEngine.Transform", "get_tag", {})
 			.method.GetInvokeAddress());
 		return invoker.Invoke(this);
 	}
@@ -69,7 +69,7 @@ int WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		printf("(NaResolver->GetClass) Class(%p): %p\n", gameObject.type, gameObject.klass);
 		NaResolver::Class object = Object::ThisClass();
 		printf("(NaResolver->GetClass) Class(%p): %p\n", object.type, object.klass);
-		NaResolver::Method get_transform = UnityResolver.GetMethod(gameObject, "UnityEngine.Transform", "get_transform()", {});
+		NaResolver::Method get_transform = UnityResolver.GetMethod(gameObject, "UnityEngine.Transform", "get_transform", {});
 		printf("(NaResolver->GetMethod) Method(%p): %p\n", get_transform.method.GetInvokeAddress(), get_transform.method);
 		void* __this = nullptr; // fake value for test
 		void* result = NaApiInvoker<void*, void*>(get_transform.method.GetInvokeAddress()).Invoke(__this);
