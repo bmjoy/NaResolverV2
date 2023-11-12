@@ -2,7 +2,6 @@
 // Hi NaResolver						//
 // Author: MidTerm						//
 // Version: v2.0						//
-// License: MIT							//
 //**************************************//
 
 // Change Log (Started since v1.8):
