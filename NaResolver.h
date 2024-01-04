@@ -349,9 +349,9 @@ namespace NaOrganization
 				return class_get_field_from_name(klass, name.c_str());
 			}
 			
-			int32_t Field::GetOffset() const
+			uint32_t Field::GetOffset() const
 			{
-				static auto field_get_offset = VmMethodInvoker<int32_t, void*>(TEXT("il2cpp_field_get_offset"), TEXT("mono_field_get_offset"));
+				static auto field_get_offset = VmMethodInvoker<uint32_t, void*>(TEXT("il2cpp_field_get_offset"), TEXT("mono_field_get_offset"));
 				return field_get_offset(fieldInfo);
 			}
 
